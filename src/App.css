@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  background-color: rgb(15, 15, 15);
+  min-height: 960px;
+
+
 }
 
 .App-logo {
@@ -32,7 +36,221 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
+
+
+/* span question*/
+#span-question {
+  display: flex;
+  justify-content: left;
+  height: 100pt;
+  margin-left: 50px;
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+
+
+/* training radio */
+
+
+.radio-left {
+  display: flex;
+  vertical-align: baseline;
+  vertical-align: super;
+}
+
+
+
+/**/
+.item-ml-0 {
+  margin-left: 10px;
+
+  text-align: left;
+}
+
+.clickMe {
+  margin-left: 10px;
+}
+
+.btnNav {
+  width: 100px;
+}
+
+.label-verb {
+  font-size: 1.5rem;
+}
+
+.label-verb-question {
+  font-size: 3rem;
+}
+
+
+
+.home-card {
+  height: auto;
+}
+
+.col-sidebar {
+  max-width: 20%;
+}
+
+.radio-container {
+  background-color: #5d626375;
+  font-weight: bold;
+  font-size: 1.5rem;
+
+  color: rgb(231, 234, 236);
+}
+
+#training-content {
+  max-width: 500px;
+
+}
+
+.bHidden {
+  display: none;
+}
+
+.input-training {
+  max-width: 70px;
+  padding-left: 15px;
+}
+
+.input-form-training {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+
+  max-width: 400px;
+
+}
+
+
+input:invalid {
+  background-color: ivory;
+  border: #61dafb;
+  outline: 2px solid red;
+  border-radius: 5px;
+}
+
+
+.modal-container {
+  position: relative;
+}
+
+.modal-container .modal,
+.modal-container .modal-backdrop {
+  position: absolute;
+}
+
+#training-content #label-note {
+
+  font-size: 1.2rem;
+
+}
+
+#exampleCheck1 {
+  height: 25px;
+  width: 25px;
+  margin-right: 20px;
+
+}
+
+#app-container .btn-courses {
+  min-width: 100px;
+  min-height: 50px;
+  max-width: fit-content;
+  margin-top: 30px;
+  font-size: 2rem;
+
+}
+
+#course-container button {
+  min-width: 150px;
+  min-height: 50px;
+  margin-top: 20px;
+}
+
+/* Chia động từ */
+#cdn-input-goto {
+  width: 120px;
+}
+
+
+#otn-bd-kt .input-group {
+  justify-items: center;
+  justify-content: center;
+}
+
+#otn-bd-kt .input-group-text {
+  width: 90px;
+}
+
+
+#training-btn button {
+  min-width: 110px;
+  height: 40px;
+  margin-right: 20px;
+
+}
+
+#word-container,
+#NoRemember-Container {
+  background-color: rgba(1, 8, 19, 0.744);
+  color: rgb(249, 248, 240);
+  border-style: solid;
+  border-color: rgba(35, 37, 35, 0.163);
+
+}
+
+#word-container tbody tr td,
+#NoRemember-Container tbody tr td {
+  border-color: rgba(80, 86, 86, 0.386);
+}
+
+#lb-note {
+  min-width: 90px;
+  margin-right: 20px;
+}
+
+#label-note {
+
+
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+
+/* Mobile: with  <740px*/
+@media only screen and (max-width:46.1875em) {
+  .courses-product {
+    flex-direction: column;
+  }
+
+  .col-sidebar {
+    max-width: 0px;
+  }
+
+  .col-content {
+    width: fit-content;
+
+  }
+}
+
+
+
+
+
+
+
+/* Table: with  740px<  <1024px */
+@media only screen and (min-width:46.25em) and (max-width:63.9375em) {}
+
+@media only screen and (min-width:63.9375em) {}
