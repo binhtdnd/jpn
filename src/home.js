@@ -6,7 +6,7 @@ export const N5_DATA = [
     "mean": "Chuyến số - ",
     "onlykanji": "番線",
     "hv": "Phiên tuyến",
-    "eng": "~ platform"
+    "eng": "route"
   },
   {
     "stt": "1",

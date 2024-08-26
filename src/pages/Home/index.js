@@ -79,13 +79,13 @@ class Home extends Component {
                             Update
                         </button>
                     </div>
-                    <div>
+                    {/* <div>
                         <button className='btn btn-danger btn-courses'
                             onClick={(e) => { this.btnTest(e) }}
                         >
                             Test
                         </button>
-                    </div>
+                    </div> */}
                 </div>
 
 

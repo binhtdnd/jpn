@@ -7,14 +7,14 @@ class Training extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sp1: '',
-      sp2: '',
+      sp1: '',    //tu`   listKanji..
+      sp2: '',     //to   listHira..
       txt1: '暗証番号',
       txt2: 'あんしょうばんごう',
       ipStart: '',
       ipEnd: '',
-      ip1: 0,
-      ip2: 0,
+      ip1: 0,    //start point
+      ip2: 0,     //end point
       courses: window.location.pathname.slice(-2),
       tempWord: ['', '暗証番号', 'あんしょうばんごう', 'Mã số định danh cá nhân'],
 
@@ -29,6 +29,7 @@ class Training extends Component {
       stateMean: [],
       stateOnlyKanji: [],
       stateHV: [],
+      stateEng: [],
       check: 0,
       pass: true,
       scount: 0,
@@ -37,15 +38,18 @@ class Training extends Component {
       sNote: '',
       showNote: false,
       lastStep: 0,
+      isAddEng: 0
+
     }
 
   };
 
+  // update lai web sau moi lan state Thay doi
   afterSetStateFinished() {
 
     const rd = this.getRandomIntInclusive(1, 4)
     this.setState({
-      question: this.getTxt(this.state.step, this.state.sp1, false),
+      question: this.getTxtQuestion(this.state.step, this.state.sp1, false),
       a1: this.getTxt(this.state.step, this.state.sp2, true),
       a2: this.getTxt(this.state.step, this.state.sp2, true),
       a3: this.getTxt(this.state.step, this.state.sp2, true),
@@ -80,6 +84,8 @@ class Training extends Component {
     let lMean = []
     let lHv = []
     let lOnlyKanji = []
+    let lEng = []
+
     //const data = res.data;
     let lcount = 0;
     let tempIp1 = Number.parseInt(sString[2]);
@@ -93,6 +99,7 @@ class Training extends Component {
         lMean.push(element.mean)
         lHv.push(element.hv)
         lOnlyKanji.push(element.onlykanji)
+        lEng.push(element.eng)
         lcount++
       } else if (nm === tempIp2 + 1) {
         const addPosition = sString[0]
@@ -101,15 +108,16 @@ class Training extends Component {
           lKanji.push("Hết rồi, Quay lại đi, bấm gì nữa")
         } else if (addPosition === '2') {
           lHiragana.push("Hết rồi, Quay lại đi, bấm gì nữa")
-        } if (addPosition === '3') {
+        } else if (addPosition === '3') {
           lMean.push("Hết rồi, Quay lại đi, bấm gì nữa")
         }
+        const mess = "Hết rồi, Quay lại đi, bấm gì nữa"
+        lKanji.push(mess)
+        lHiragana.push(mess)
+        lMean.push(mess)
+        lEng.push(mess)
       }
     });
-
-
-
-
 
     this.setState({
 
@@ -118,15 +126,13 @@ class Training extends Component {
       stateMean: lMean,
       stateHV: lHv,
       stateOnlyKanji: lOnlyKanji,
+      stateEng: lEng,
       scount: lcount,
     }, () => {
       this.afterSetStateFinished();
     }
     );
-
-
     localStorage.setItem(`lastStep${courses}`, Number.parseInt(sString[2]))
-
   };
 
   saveLastStep() {
@@ -135,18 +141,32 @@ class Training extends Component {
     })
     localStorage.setItem(`lastStep${this.state.courses}`, this.state.step + this.state.ip1 + 1)
   }
+  // Option show Note hay ko
   checkShowNote(e) {
     this.setState({
       showNote: e.target.checked
     })
-
   }
+  checkShowEnglish(e) {
+    if (e.target.checked) {
+      this.setState({
+        isAddEng: 1
+      })
+    } else {
+      this.setState({
+        isAddEng: 0
+      })
+    }
+  }
+
+  //khi noi dung trong Note thay doi (typing) => luu noi dung hien tai vao State => phuc vu cho [Note ok - Save]
   handleNoteChange(e) {
     this.setState({
       sNote: e.target.value
     })
     e.preventDefault()
   }
+  //bam ok o Form Note => luu noi dung Note vao LocalStorage
   btnNoteOk(e) {
     let position = this.state.ip1 + this.state.step
     let st = this.state.courses + '' + position
@@ -155,6 +175,7 @@ class Training extends Component {
 
     e.preventDefault()
   }
+  // bam nut ghi chu => doc ghi chu' cu~ theo stt => ghi vao state => show in field
   onClickNote(e) {
     this.setState({
       sNote: localStorage.getItem(`${this.state.courses}${this.state.ip1 + this.state.step}`)
@@ -162,7 +183,7 @@ class Training extends Component {
 
     e.preventDefault()
   }
-
+  //chi hien thi kanji o cau hoi, doi phan hiragana => ***, eg: *祖父**
   onClickOnlyKanji(e) {
 
     this.setState({
@@ -170,6 +191,7 @@ class Training extends Component {
     })
     e.preventDefault()
   }
+  //show toast Mean
   onClickMean(e) {
     toast(this.state.stateMean[this.state.step], {
       position: "top-right",
@@ -185,9 +207,8 @@ class Training extends Component {
 
 
   }
+  //show toast Hv
   onClickHV(e) {
-
-
     toast(this.state.stateHV[this.state.step], {
       position: "top-right",
       autoClose: 1500,
@@ -202,9 +223,11 @@ class Training extends Component {
 
 
   }
+  //luu Word chua thuoc
   onClickSave(e) {
-
+    // st = list chua thuoc cua? course hien tai
     let st = localStorage.getItem(window.location.pathname.slice(-2))
+
 
     if (!st) {
       localStorage.setItem(this.state.courses, this.state.step + this.state.ip1)
@@ -226,6 +249,7 @@ class Training extends Component {
     });
     e.preventDefault();
   }
+
   onClickBack(e) {
 
     if (this.state.step <= 0) {
@@ -253,18 +277,35 @@ class Training extends Component {
 
     e.preventDefault();
   }
-
+  // click vao dap an nhe, param = dap an A B C D
   onClickBtn1(event, param) {
     this.saveLastStep()
     if (this.checkAnswer(this.state.check, param)) {
+      //Correct
+      if (this.state.isAddEng === 0) {
+        this.setState({
+          step: this.state.step + 1,
+        }, () => {
+          this.afterSetStateFinished();
+        })
 
-      this.setState({
-        step: this.state.step + 1
-      }, () => {
-        this.afterSetStateFinished();
-      })
+      } else if (this.state.isAddEng === 1) {
+        this.setState({
+          isAddEng: 2
+        }, () => {
+          this.afterSetStateFinished();
+        })
+      } else if (this.state.isAddEng === 2) {
+        this.setState({
+          step: this.state.step + 1,
+          isAddEng: 1
+        }, () => {
+          this.afterSetStateFinished();
+        })
+      }
+
     } else {
-
+      //Incorrect
       this.setState({
         pass: false
       }, () => {
@@ -280,7 +321,7 @@ class Training extends Component {
   }
 
 
-
+  // neu chon dung dap an
   checkAnswer(checked, answer) {
     if (parseInt(checked) === parseInt(answer)) {
       return true
@@ -288,15 +329,45 @@ class Training extends Component {
       return false
     }
   }
-
+  // lay random word, eg: tu 0 -> 50. Dang o step 20. se lay ngau nhien 1 tu 0->50 khac 20 cho vao dap an ABCD
+  // rd ra 1 dap an dung lay theo step 20
+  // tha so thu 3 'isRd' co rd trong ham getTxt hay ko
+  //cau hoi ko rd, ABCD rd, chon 1 cai dung cho vao 1 trong 4 dap an
   getTxt(step, where, isRd) {
     let st = parseInt(step)
     let wh = parseInt(where)
     let word = ''
+    if (this.state.isAddEng === 2) {
+      wh = 4
+    }
 
     if (isRd) {
       do {
-        st = this.getRandomIntInclusive(0, this.state.scount)
+        st = this.getRandomIntInclusive(0, this.state.scount - 1)
+      } while (parseInt(st) === parseInt(step) || parseInt(st) === parseInt(this.state.rd));
+    }
+
+    if (wh === 1) {
+      word = this.state.stateKanji[st]
+    } else if (wh === 2) {
+      word = this.state.stateHiragana[st]
+    } else if (wh === 3) {
+      word = this.state.stateMean[st]
+    } else if (wh === 4) {
+      word = this.state.stateEng[st]
+    }
+
+    return word
+  }
+  getTxtQuestion(step, where, isRd) {
+    let st = parseInt(step)
+    let wh = parseInt(where)
+    let word = ''
+
+
+    if (isRd) {
+      do {
+        st = this.getRandomIntInclusive(0, this.state.scount - 1)
       } while (parseInt(st) === parseInt(step) || parseInt(st) === parseInt(this.state.rd));
     }
 
@@ -310,9 +381,7 @@ class Training extends Component {
 
     return word
   }
-
-
-
+  //ho tro ham getTxt, chon 1 so ngau nhien tu 0->50 truong hop chon tu Word 0 to 50
   getRandomIntInclusive(min, max) {
 
     min = Math.ceil(parseInt(min));
@@ -322,8 +391,6 @@ class Training extends Component {
   }
 
   render() {
-
-
 
     return (
       <div id='training-content' className='container'>
@@ -367,10 +434,15 @@ class Training extends Component {
           <span className="badge badge-warning radio-left">{this.state.pass === true ? "" : 'Sai !!!'}</span>
           <span className="badge badge-danger radio-left">{this.state.step - (this.state.ip2 - this.state.ip1) > 1 ? 'Đã bảo hết rồi (◣_◢)' : ''}</span>
         </div>
+
+        {/* show current step  */}
         <h4><span className="badge badge-dark">{this.state.ip1 + this.state.step + 1}</span></h4>
+
+
+        {/* 9 nut mo rong  <quay lai + bo qua + Luu> ...*/}
         <div id='training-btn'>
 
-          {/* quay lai */}
+          {/* 3 nut dong dau Quay lai + Bo qua + Save */}
           <div className=' d-flex justify-content-start mt-5'>
             <button className='btn btn-primary' onClick={(event) => this.onClickBack(event)}>
               <i className="fa fa-chevron-left"></i>
@@ -388,7 +460,8 @@ class Training extends Component {
               Lưu
             </button>
           </div>
-          {/* Han Viet */}
+
+          {/* 3 nut dong 2  Han Viet + Nghia + onlyKanji */}
           <div className=' d-flex justify-content-start mt-3'>
             <button className='btn btn-dark' onClick={(event) => this.onClickHV(event)}>Hán Việt{'\u00A0'}</button>
             <button className='btn btn-secondary' onClick={(event) => this.onClickMean(event)}>Nghĩa{'\u00A0'}</button>
@@ -397,7 +470,8 @@ class Training extends Component {
               {this.state.isOnlyKanji ? '食' : '食べる'}
             </button>
           </div>
-          {/* NOTE */}
+
+          {/* 3 nut hang 3 Ghi chu + '̶G̶̶h̶̶i̶ ̶c̶̶h̶̶ú̶' + Huong dan */}
           <div className='d-flex justify-content-start mt-3' id='div-note'>
             <div className="form-check d-flex text-center">
               <input id="exampleCheck1" type="checkbox" className="form-check-input"
@@ -421,11 +495,31 @@ class Training extends Component {
               Hướng dẫn
             </button>
           </div>
+
+          {/* hang cuoi , nut Eng on Off*/}
+          <div className='d-flex justify-content-start mt-3' id='div-english'>
+            <div className="form-check d-flex text-center">
+              <input id="exampleCheck2" type="checkbox" className="form-check-input"
+                onChange={(event) => this.checkShowEnglish(event)}
+              />
+
+
+              <label id='lb-english' htmlFor='exampleCheck2'
+                className={`align-middle align-item-center badge ${this.state.isAddEng ? "badge-success" : "badge-dark"}`}>
+                <h4>{this.state.isAddEng ? 'English' : '̶E̴n̴g̴l̴i̴s̴h̴'}</h4>
+              </label>
+
+            </div>
+
+          </div>
+
+          {/* label noi. dung ghi chu, hien thi khi tich o '̶G̶̶h̶̶i̶ ̶c̶̶h̶̶ú̶' */}
           <p id='label-note' className={`display-linebreak badge badge-dark mt-3 ${this.state.showNote ? "" : 'bHidden'}`}>
             {localStorage.getItem(`${this.state.courses}${this.state.ip1 + this.state.step}`)}
           </p>
         </div>
-        {/* modal */}
+
+        {/* modal show form When click NoteBtn*/}
         <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -462,11 +556,8 @@ class Training extends Component {
             </div>
           </div>
         </div >
-        {/* modal guide */}
 
-
-
-
+        {/* modal huong dan */}
         <div className="modal fade" id="guideModal" tabIndex="-1" role="dialog" aria-labelledby="guideModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -505,6 +596,7 @@ class Training extends Component {
             </div>
           </div>
         </div>
+
       </div >
     )
   }
